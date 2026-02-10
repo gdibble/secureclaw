@@ -3,6 +3,19 @@ conf.json
 .env
 .env.*
 
+# SSH keys — NEVER commit
+y
+y.pub
+*.pem
+id_rsa*
+
+# Internal development docs
+OPENCLAW-SECURECLAW-PRODUCT-SPEC.md
+
+# Root dev-only package files (real package is in secureclaw/)
+package.json
+package-lock.json
+
 # Dependencies
 node_modules/
 
