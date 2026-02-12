@@ -43,7 +43,7 @@ describe('crypto', () => {
     });
 
     it('roundtrip works for JSON content', () => {
-      const plaintext = JSON.stringify({ apiKey: 'sk-test-12345', secret: 'my-secret' });
+      const plaintext = JSON.stringify({ apiKey: 'test-key-12345', value: 'my-value' });
       const encrypted = encrypt(plaintext, machineId, stateDir);
       const decrypted = decrypt(encrypted, machineId, stateDir);
       expect(decrypted).toBe(plaintext);

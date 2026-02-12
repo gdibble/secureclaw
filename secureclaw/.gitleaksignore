@@ -1,0 +1,11 @@
+# SecureClaw is a security scanner — it contains detection patterns (regexes)
+# for API keys, tokens, and credentials. These are NOT actual secrets.
+
+# Auditor and credential-hardening contain regex patterns for key detection
+src/auditor.ts
+src/hardening/credential-hardening.ts
+
+# Advisor skill contains grep search patterns and regex rules for key detection
+advisor/scripts/quick-audit.sh
+advisor/configs/privacy-rules.json
+advisor/configs/security-checklist.json
