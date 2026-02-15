@@ -8,6 +8,29 @@ Developed by [Adversa AI](https://adversa.ai) -- Agentic AI Security and Red Tea
 
 SecureClaw audits your OpenClaw installation for misconfigurations and known vulnerabilities, applies automated hardening fixes, and gives your agent behavioral security rules that protect against prompt injection, credential theft, supply chain attacks, and privacy leaks.
 
+```mermaid
+graph TB
+    subgraph SecureClaw["SecureClaw Defense Layers"]
+        L1["Layer 1: Audit<br/>51 checks · 8 categories<br/>OWASP ASI mapped"]
+        L2["Layer 2: Hardening<br/>5 modules · auto-fix<br/>backup + rollback"]
+        L3["Layer 3: Behavioral Rules<br/>12 LLM directives · ~1,150 tokens<br/>runtime protection"]
+    end
+
+    Agent["OpenClaw Agent"] --> L3
+    L3 --> L2
+    L2 --> L1
+    L1 --> Infra["Infrastructure<br/>Gateway · Files · Credentials"]
+```
+
+```mermaid
+flowchart LR
+    Install["Install"] --> Audit["Audit<br/>51 checks"]
+    Audit --> Report["Report<br/>findings"]
+    Report --> Harden["Harden<br/>auto-fix"]
+    Harden --> Monitor["Monitor<br/>runtime"]
+    Monitor --> Respond["Respond<br/>incidents"]
+```
+
 ---
 
 ## Table of Contents
