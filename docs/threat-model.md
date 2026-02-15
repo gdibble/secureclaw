@@ -28,7 +28,7 @@ graph TB
     end
 
     subgraph Assets["Protected Assets"]
-        Creds["Credentials<br/>.env, API keys, tokens"]
+        Creds["Credentials<br/>API keys and tokens"]
         Files["Local Filesystem"]
         APIs["External APIs<br/>Anthropic, OpenAI"]
         Gateway["Gateway Interface"]
@@ -77,9 +77,9 @@ graph LR
         S5["emergency-response.sh"]
     end
 
-    R -->|"runtime"| L2
-    L2 -->|"config"| L1
-    L1 -->|"runs"| Scripts
+    R -->|runtime| L2
+    L2 -->|config| L1
+    L1 -->|runs| Scripts
 ```
 
 ---
@@ -94,11 +94,11 @@ The highest-impact threat. External content (web pages, emails, tool outputs) co
 
 ```mermaid
 flowchart LR
-    Attacker["Attacker"] -->|"embeds instructions"| WebPage["Web Page / Email"]
-    WebPage -->|"agent reads"| LLM["Agent LLM"]
-    LLM -->|"hijacked"| Exfil["Exfiltrate Data"]
-    LLM -->|"hijacked"| Config["Modify Config"]
-    LLM -->|"hijacked"| C2["Establish C2"]
+    Attacker["Attacker"] -->|embeds instructions| WebPage["Web Page or Email"]
+    WebPage -->|agent reads| LLM["Agent LLM"]
+    LLM -->|hijacked| Exfil["Exfiltrate Data"]
+    LLM -->|hijacked| Config["Modify Config"]
+    LLM -->|hijacked| C2["Establish C2"]
 
     style Attacker fill:#dc3545,color:#fff
     style Exfil fill:#dc3545,color:#fff
@@ -128,10 +128,10 @@ Attacker or compromised skill reads API keys from `.env`, credential files, or c
 
 ```mermaid
 flowchart LR
-    Attacker["Attacker / Malicious Skill"] -->|"reads"| Env[".env / credentials/"]
-    Env -->|"contains"| Keys["API Keys<br/>sk-ant-*, xoxb-*, ghp_*"]
-    Keys -->|"exfiltrated via"| HTTP["HTTP POST / curl"]
-    Keys -->|"leaked in"| Moltbook["Moltbook / Public Post"]
+    Attacker["Attacker or Malicious Skill"] -->|reads| Env["Credential Files"]
+    Env -->|contains| Keys["API Keys and Tokens"]
+    Keys -->|exfiltrated via| HTTP["HTTP POST"]
+    Keys -->|leaked in| Moltbook["Moltbook or Public Post"]
 
     style Attacker fill:#dc3545,color:#fff
     style HTTP fill:#dc3545,color:#fff
@@ -159,18 +159,18 @@ Malicious skill distributed through ClawHub or other channels contains hidden co
 
 ```mermaid
 flowchart TB
-    Attacker["Attacker"] -->|"publishes"| ClawHub["ClawHub / Marketplace"]
-    ClawHub -->|"user installs"| Skill["Malicious Skill"]
+    Attacker["Attacker"] -->|publishes| ClawHub["ClawHub Marketplace"]
+    ClawHub -->|user installs| Skill["Malicious Skill"]
 
     subgraph Payload["Hidden Payload"]
-        RCE["eval() / exec()"]
-        Cred["Read .env / credentials"]
-        C2["webhook.site / C2 callback"]
+        RCE["eval or exec calls"]
+        Cred["Read credential files"]
+        C2["C2 callback"]
         Typo["Typosquatted name"]
     end
 
     Skill --> Payload
-    Payload -->|"executes on"| Agent["Agent Host"]
+    Payload -->|executes on| Agent["Agent Host"]
 
     style Attacker fill:#dc3545,color:#fff
     style RCE fill:#dc3545,color:#fff
@@ -198,15 +198,15 @@ Attacker or compromised skill modifies SOUL.md, IDENTITY.md, or other cognitive 
 
 ```mermaid
 flowchart LR
-    Attacker["Attacker"] -->|"modifies"| Soul["SOUL.md"]
-    Attacker -->|"modifies"| Identity["IDENTITY.md"]
-    Attacker -->|"modifies"| Tools["TOOLS.md"]
+    Attacker["Attacker"] -->|modifies| Soul["SOUL.md"]
+    Attacker -->|modifies| Identity["IDENTITY.md"]
+    Attacker -->|modifies| Tools["TOOLS.md"]
 
-    Soul -->|"agent loads"| LLM["Agent LLM<br/>(now compromised)"]
-    Identity -->|"agent loads"| LLM
-    Tools -->|"agent loads"| LLM
+    Soul -->|agent loads| LLM["Agent LLM<br/>now compromised"]
+    Identity -->|agent loads| LLM
+    Tools -->|agent loads| LLM
 
-    LLM -->|"persistent<br/>malicious behavior"| Actions["Agent Actions"]
+    LLM -->|persistent<br/>malicious behavior| Actions["Agent Actions"]
 
     style Attacker fill:#dc3545,color:#fff
     style Actions fill:#dc3545,color:#fff
@@ -233,12 +233,12 @@ The OpenClaw gateway is bound to `0.0.0.0` without authentication, allowing anyo
 
 ```mermaid
 flowchart LR
-    Internet["Internet / LAN"] -->|"port 18789"| Gateway["OpenClaw Gateway<br/>0.0.0.0:18789"]
-    Gateway -->|"no auth"| Config["Read openclaw.json"]
-    Gateway -->|"no auth"| Exec["Execute Commands"]
-    Gateway -->|"no auth"| Creds["Read Credentials"]
+    Internet["Internet or LAN"] -->|port 18789| Gateway["OpenClaw Gateway<br/>bound to 0.0.0.0"]
+    Gateway -->|no auth| Config["Read config"]
+    Gateway -->|no auth| Exec["Execute Commands"]
+    Gateway -->|no auth| Creds["Read Credentials"]
 
-    Hardened["SecureClaw Hardened"] -.->|"127.0.0.1 + token"| GW2["Gateway<br/>127.0.0.1:18789"]
+    Hardened["SecureClaw Hardened"] -.->|loopback plus token| GW2["Gateway<br/>bound to 127.0.0.1"]
 
     style Internet fill:#dc3545,color:#fff
     style Exec fill:#dc3545,color:#fff
@@ -300,9 +300,9 @@ A compromised or malicious agent sends instructions via Moltbook or DMs to hijac
 
 ```mermaid
 flowchart LR
-    BadAgent["Compromised<br/>Agent A"] -->|"Moltbook / DM"| GoodAgent["Target<br/>Agent B"]
-    GoodAgent -->|"follows instructions"| Exfil["Exfiltrates B's Data"]
-    GoodAgent -->|"follows instructions"| Spread["Compromises<br/>Agent C"]
+    BadAgent["Compromised<br/>Agent A"] -->|Moltbook or DM| GoodAgent["Target<br/>Agent B"]
+    GoodAgent -->|follows instructions| Exfil["Exfiltrates data"]
+    GoodAgent -->|follows instructions| Spread["Compromises<br/>Agent C"]
 
     style BadAgent fill:#dc3545,color:#fff
     style Exfil fill:#dc3545,color:#fff
